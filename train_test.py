@@ -22,7 +22,7 @@ def train_model(model, train_data, val_data, batch, epoch, loss_func, opt):
         for idx, (img, label) in enumerate(train_data):
 
             # 换转成cuda 类型
-            img, label = img.to('cuda'), label.to('cuda')
+            #img, label = img.to('cuda'), label.to('cuda')
 
             img = img.clone().requires_grad_(True)
             label = label.clone().detach()
@@ -51,7 +51,7 @@ def train_model(model, train_data, val_data, batch, epoch, loss_func, opt):
                 val_record = []
                 for (data, target) in val_data:
                     # 转化数据类型
-                    data, target = data.to('cuda'), target.to('cuda')
+                    #data, target = data.to('cuda'), target.to('cuda')
                     data, target = data.clone().requires_grad_(True), target.clone().detach()
 
                     # 将数据喂入：
@@ -61,7 +61,7 @@ def train_model(model, train_data, val_data, batch, epoch, loss_func, opt):
                     val_record.append(val_acc)
 
                     # 打印训练、验证结果
-                    print(f'epoch{i + 1}:Train Acc = {train_corrections[-1]} Train Loss = {train_losses[-1]} ')
+                print(f'epoch{i + 1}:Train Acc = {train_corrections[-1]} Train Loss = {train_losses[-1]} Val Acc = {val_record[-1]}')
 
 
 def test_model(model, test_data):
@@ -73,7 +73,7 @@ def test_model(model, test_data):
     test_acc = []
     for idx, (img, label) in enumerate(test_data):
         # 处理数据
-        img, label = img.to('cuda'), label.to('cuda')
+        #img, label = img.to('cuda'), label.to('cuda')
         img, label = img.clone().requires_grad_(True), label.clone().detach()
 
         output = model(img)

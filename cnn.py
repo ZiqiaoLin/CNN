@@ -12,31 +12,37 @@ class ConvNet(nn.Module):
     def __init__(self):
         super(ConvNet, self).__init__()
 
-        self.conv1 = nn.Conv2d(1, 6, 5, padding=2)
-        self.conv2 = nn.Conv2d(6, 16, 5, padding=2)
-
-        self.pooling = nn.MaxPool2d(2, 2)
-
-        self.fc1 = nn.Linear(16 * 7 * 7, 512)
-        self.fc2 = nn.Linear(512, 10)
+        self.model1 = nn.Sequential(
+            nn.Conv2d(1, 6, 5, padding=2),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),
+            nn.Conv2d(6, 16, 5, padding=2),
+            nn.ReLU(),
+            nn.MaxPool2d(2, 2),
+            nn.Flatten(),
+            nn.Linear(16 * 7 * 7, 512),
+            nn.ReLU(),
+            nn.Linear(512, 10)
+        )
 
     def forward(self, x):
-        x = f.relu(self.conv1(x))
-        x = self.pooling(x)
-        x = f.relu(self.conv2(x))
-        x = self.pooling(x)
-        x = x.view(x.shape[0], -1)
-        x = f.relu(self.fc1(x))
-        x = self.fc2(x)
+        x = self.model1(x)
         output = f.log_softmax(x, dim=1)
         return output
 
 
 def cal_correction(output, target):
-    pred = torch.argmax(output,dim=1)
+    pred = torch.argmax(output, dim=1)
 
-    #correct = pred.eq(target.data.view_as(output)).sum()
-    correct = torch.eq(pred,target).sum()
+    # correct = pred.eq(target.data.view_as(output)).sum()
+    correct = torch.eq(pred, target).sum()
     percentage = (correct / len(target)) * 100
 
     return percentage
+
+if __name__ == '__main__':
+    model = ConvNet()
+    print(model)
+    input = torch.ones((64,1,28,28))
+    output = model(input)
+    print(output.shape)

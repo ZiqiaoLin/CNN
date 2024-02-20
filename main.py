@@ -16,6 +16,7 @@ cnn_model = ConvNet().cpu()
 
 loss_func = torch.nn.CrossEntropyLoss()
 
+# 优化器
 sgd_opt = torch.optim.SGD(cnn_model.parameters(),
                           lr=learning_rate,
                           momentum=momentum)
